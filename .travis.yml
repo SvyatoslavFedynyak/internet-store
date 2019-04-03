@@ -8,4 +8,4 @@ env:
 install:
   - pip install -r requirements.txt
 before_script:
-  - mysql -e 'create database django;' -u django --password='password'
+  - mysql -e 'create database django; GRANT ALL PRIVILEGES ON *.* TO "django"@"localhost" IDENTIFIED BY "password"; flush privileges;' -u root
