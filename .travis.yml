@@ -10,4 +10,4 @@ install:
 before_script:
   - mysql -e 'create database django; GRANT ALL PRIVILEGES ON *.* TO "django"@"localhost" IDENTIFIED BY "password"; flush privileges;' -u root
 script:
-  - python /src/camerastore/manage.py migrate
+  - python src/camerastore/manage.py migrate
