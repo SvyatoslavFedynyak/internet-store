@@ -10,11 +10,15 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
-import os
+import os, sys
 from oscar.defaults import *
 from oscar import OSCAR_MAIN_TEMPLATE_DIR
 from oscar import get_core_apps
 
+# Path helper
+PROJECT_DIR = os.path.dirname(__file__)
+location = lambda x: os.path.join(
+os.path.dirname(os.path.realpath(__file__)), x)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -25,11 +29,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'st_jg5(80zc=!y*ongf0z7mo1tthq()7u2)e)upycmc$yq5z9_'
+OSCAR_SHOP_NAME = "Phototechnic Tolkach"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = ['localhost', '192.168.88.229']
 
 
 # Application definition
@@ -47,6 +52,14 @@ INSTALLED_APPS = [
 ] + get_core_apps()
 
 SITE_ID = 1
+
+OSCAR_INITIAL_ORDER_STATUS = 'Pending'
+OSCAR_INITIAL_LINE_STATUS = 'Pending'
+OSCAR_ORDER_STATUS_PIPELINE = {
+    'Pending': ('Being processed', 'Cancelled',),
+    'Being processed': ('Processed', 'Cancelled',),
+    'Cancelled': (),
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -87,13 +100,19 @@ TEMPLATES = [
     },
 ]
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': '../media/cache',
+    }
+}
+
 AUTHENTICATION_BACKENDS = (
     'oscar.apps.customer.auth_backends.EmailBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
 
 WSGI_APPLICATION = 'camerastore.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
@@ -134,9 +153,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 HAYSTACK_CONNECTIONS = {
     'default': {
-        'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
-        'URL': 'http://127.0.0.1:8983/solr',
-        'INCLUDE_SPELLING': True,
+        'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
     },
 }
 
@@ -158,4 +175,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
-MEDIA_URL = '../images/'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = location("../media")
+STATIC_ROOT = location('../static')
+THUMBNAIL_DEBUG = True
