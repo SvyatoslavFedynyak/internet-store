@@ -34,7 +34,7 @@ OSCAR_SHOP_NAME = "Phototechnic Tolkach"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '192.168.88.229']
+ALLOWED_HOSTS = ['localhost', '192.168.88.229', '127.0.0.1']
 
 
 # Application definition
@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.flatpages',
-    'widget_tweaks'
+    'widget_tweaks',
+    'social_django',
 ] + get_core_apps()
 
 SITE_ID = 1
@@ -110,6 +111,7 @@ CACHES = {
 AUTHENTICATION_BACKENDS = (
     'oscar.apps.customer.auth_backends.EmailBackend',
     'django.contrib.auth.backends.ModelBackend',
+    'social_core.backends.google.GoogleOAuth2',
 )
 
 WSGI_APPLICATION = 'camerastore.wsgi.application'

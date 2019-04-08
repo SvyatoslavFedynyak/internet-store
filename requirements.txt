@@ -4,3 +4,4 @@ django-oscar
 pysolr
 mysqlclient
 pycountry
+social-auth-app-django

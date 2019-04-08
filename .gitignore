@@ -102,3 +102,6 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+#Solr
+src/camerastore/solr-4.7.2/
