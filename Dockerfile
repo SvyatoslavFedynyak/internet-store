@@ -1,18 +1,19 @@
-FROM store-db
+FROM store-base
 LABEL maintainer="svyatoslav912@gmail.com"
+ENV HOME=/root
 EXPOSE 8000
 
 # Base directory
-#WORKDIR /root/
-#RUN mkdir online-store && cd online-store
-#COPY . ./
+WORKDIR /root/
+RUN mkdir online-store
+WORKDIR /root/online-store
+COPY src ./
+COPY requirements.txt ./
 
 # Pip
-RUN apt update 
-RUN apt install python3.6 
-RUN apt install python3-pip 
 RUN pip3 install -r requirements.txt
 
 # Run
-#RUN cd src/camerastore && python3.6 manage.py migrate
-#CMD python3.6 manage.py runserver 0.0.0.0:8000
+WORKDIR /root/online-store/camerastore 
+RUN scripts/load-db.sh
+CMD scripts/run-in-docker.sh
